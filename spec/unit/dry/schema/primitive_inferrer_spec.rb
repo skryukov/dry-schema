@@ -11,6 +11,8 @@ RSpec.describe Dry::Schema::PrimitiveInferrer, '#[]' do
     args.map { |name| Dry::Types[name.to_s] }.reduce(:|)
   end
 
+  let(:types) { Module.new.include(Dry.Types) }
+
   it 'caches results' do
     expect(inferrer[type(:string)]).to be(inferrer[type(:string)])
   end
@@ -25,6 +27,10 @@ RSpec.describe Dry::Schema::PrimitiveInferrer, '#[]' do
 
   it 'returns Array for a string type' do
     expect(inferrer[type(:array)]).to eql([Array])
+  end
+
+  it 'returns Array for a primitive array' do
+    expect(inferrer[types.Constructor(Array)]).to eql([Array])
   end
 
   it 'returns Hash for a string type' do
